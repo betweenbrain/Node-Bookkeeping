@@ -10,6 +10,7 @@
 var headers;
 var i = 0;
 
+const moment = require('moment');
 const mysql = require('./common/mysql');
 const readline = require('readline');
 const fs = require('fs');
@@ -17,32 +18,84 @@ const rl = readline.createInterface({
     input: fs.createReadStream('AccountHistory.csv')
 });
 
-rl.on('line', function (line) {
-    if (i == 0) {
-        headers = line.split(',');
-        console.log(headers);
-    }
+if (process.argv.length == 2) {
+    var params = [];
+    var sql = 'INSERT INTO transactions ( ' +
+        '`date`, ' +
+        '`check`, ' +
+        '`description`, ' +
+        '`debit`, ' +
+        '`credit`, ' +
+        '`status`, ' +
+        '`balance`) ' +
+        'VALUES';
 
-    i++;
-});
+    rl.on('line', function (line) {
+        line = line
+            .replace(/"/g, '')
+            .split(',');
+
+        if (i == 0) {
+            headers = line;
+        }
+
+        if (i >= 1) {
+            // Format date as MySQL DATE format
+            params.push(moment(line[1]).format('YYYY-MM-DD'))
+            // Set as NULL if empty string
+            params.push(line[2] = (line[2] == '') ? null : line[2]);
+            params.push(line[3] = (line[3] == '') ? null : line[3]);
+            params.push(line[4] = (line[4] == '') ? null : line[4]);
+            params.push(line[5] = (line[5] == '') ? null : line[5]);
+            params.push(line[6] = (line[6] == '') ? null : line[6]);
+            params.push(line[7] = (line[7] == '') ? null : line[7]);
+
+            sql += '( ' +
+            '?, ' +
+            '?, ' +
+            '?, ' +
+            '?, ' +
+            '?, ' +
+            '?, ' +
+            '? ' +
+            '), ';
+
+            mysql.debug(sql, params, function (data) {
+                console.log(data)
+            });
+
+            mysql.query(sql, params, function (err, rows) {
+                if (err) {
+                    console.log(err)
+                }
+
+                if (!err) {
+                    console.log(rows)
+                }
+            });
+        }
+
+        i++;
+    });
+}
 
 if (process.argv.indexOf('--create') >= 0) {
     var sql = 'CREATE TABLE IF NOT EXISTS transactions ( ' +
-        '`date` DATE, ' +
-        '`check` INT, ' +
-        '`description` VARCHAR(255), ' +
-        '`debit` DECIMAL(8, 2), ' +
-        '`credit` DECIMAL(8,2), ' +
-        '`status` VARCHAR(156), ' +
-        '`balance` DECIMAL(12, 2) ' +
+        '`date` DATE NULL, ' +
+        '`check` INT NULL, ' +
+        '`description` VARCHAR(255) NULL, ' +
+        '`debit` DECIMAL(8, 2) NULL, ' +
+        '`credit` DECIMAL(8,2) NULL, ' +
+        '`status` VARCHAR(156) NULL, ' +
+        '`balance` DECIMAL(12, 2) NULL ' +
         ') ENGINE=INNODB;';
 
     mysql.query(sql, null, function (err, rows) {
-        if(err){
+        if (err) {
             console.log(err)
         }
 
-        if(!err){
+        if (!err) {
             console.log(rows)
         }
     })
@@ -52,11 +105,11 @@ if (process.argv.indexOf('--drop') >= 0) {
     var sql = 'DROP TABLE transactions;';
 
     mysql.query(sql, null, function (err, rows) {
-        if(err){
+        if (err) {
             console.log(err)
         }
 
-        if(!err){
+        if (!err) {
             console.log(rows)
         }
     })
