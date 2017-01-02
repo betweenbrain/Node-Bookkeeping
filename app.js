@@ -27,15 +27,29 @@ rl.on('line', function (line) {
 });
 
 if (process.argv.indexOf('--create') >= 0) {
-    var sql = 'CREATE DATABASE IF NOT EXISTS transactions ( ' +
-        '`date` DATE ' +
-        '`check` INT ' +
-        '`description` VARCHAR(255) ' +
-        '`debit` DECIMAL (8, 2) ' +
-        '`credit` DECIMAL (8,2) ' +
-        '`status` VARCHAR(156) ' +
-        '`balance` DECIMAL (12, 2) ' +
-        ') ENGINE=INNODB';
+    var sql = 'CREATE TABLE IF NOT EXISTS transactions ( ' +
+        '`date` DATE, ' +
+        '`check` INT, ' +
+        '`description` VARCHAR(255), ' +
+        '`debit` DECIMAL(8, 2), ' +
+        '`credit` DECIMAL(8,2), ' +
+        '`status` VARCHAR(156), ' +
+        '`balance` DECIMAL(12, 2) ' +
+        ') ENGINE=INNODB;';
+
+    mysql.query(sql, null, function (err, rows) {
+        if(err){
+            console.log(err)
+        }
+
+        if(!err){
+            console.log(rows)
+        }
+    })
+}
+
+if (process.argv.indexOf('--drop') >= 0) {
+    var sql = 'DROP TABLE transactions;';
 
     mysql.query(sql, null, function (err, rows) {
         if(err){
