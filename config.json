@@ -1,0 +1,9 @@
+{
+    "mysql": {
+        "database": "node-bookkeeping",
+        "host"    : "localhost",
+        "password": "",
+        "port"    : "3306",
+        "user"    : "root"
+    }
+}
