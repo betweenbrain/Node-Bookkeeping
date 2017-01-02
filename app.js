@@ -12,6 +12,7 @@ var i = 0;
 
 const moment = require('moment');
 const mysql = require('./common/mysql');
+const Promise = require('promise');
 const readline = require('readline');
 const fs = require('fs');
 const rl = readline.createInterface({
@@ -28,7 +29,7 @@ if (process.argv.length == 2) {
         '`credit`, ' +
         '`status`, ' +
         '`balance`) ' +
-        'VALUES';
+        'VALUES ';
 
     rl.on('line', function (line) {
         line = line
@@ -50,6 +51,10 @@ if (process.argv.length == 2) {
             params.push(line[6] = (line[6] == '') ? null : line[6]);
             params.push(line[7] = (line[7] == '') ? null : line[7]);
 
+            if (i >= 2) {
+                sql += ', ';
+            }
+
             sql += '( ' +
             '?, ' +
             '?, ' +
@@ -58,25 +63,29 @@ if (process.argv.length == 2) {
             '?, ' +
             '?, ' +
             '? ' +
-            '), ';
-
-            mysql.debug(sql, params, function (data) {
-                console.log(data)
-            });
-
-            mysql.query(sql, params, function (err, rows) {
-                if (err) {
-                    console.log(err)
-                }
-
-                if (!err) {
-                    console.log(rows)
-                }
-            });
+            ')';
         }
 
         i++;
     });
+
+    rl.on('close', function () {
+        sql += ';'
+
+        mysql.debug(sql, params, function (data) {
+            console.log(data)
+        });
+
+        mysql.query(sql, params, function (err, rows) {
+            if (err) {
+                console.log(err)
+            }
+
+            if (!err) {
+                console.log(rows)
+            }
+        });
+    })
 }
 
 if (process.argv.indexOf('--create') >= 0) {
