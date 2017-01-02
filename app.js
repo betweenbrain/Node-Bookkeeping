@@ -10,11 +10,10 @@
 var headers;
 var i = 0;
 
+const fs = require('fs');
 const moment = require('moment');
 const mysql = require('./common/mysql');
 const readline = require('readline');
-const rowModel = require('./models/rowModel');
-const fs = require('fs');
 const rl = readline.createInterface({
     input: fs.createReadStream('AccountHistory.csv')
 });
@@ -42,7 +41,7 @@ if (process.argv.length == 2) {
 
         if (i >= 1) {
             // Format date as MySQL DATE format
-            params.push()
+            params.push(moment(line[1]).format('YYYY-MM-DD'))
             // Set as NULL if empty string
             params.push(line[2] = (line[2] == '') ? null : line[2]);
             params.push(line[3] = (line[3] == '') ? null : line[3]);
@@ -72,9 +71,11 @@ if (process.argv.length == 2) {
     rl.on('close', function () {
         sql += ';'
 
-        mysql.debug(sql, params, function (data) {
-            console.log(data)
-        });
+        /*
+         mysql.debug(sql, params, function (data) {
+         console.log(data)
+         });
+         */
 
         mysql.query(sql, params, function (err, rows) {
             if (err) {
