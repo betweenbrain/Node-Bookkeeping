@@ -67,40 +67,50 @@ module.exports = {
      * @param debit
      * @returns {Promise}
      */
-    isDuplicate: function (date, desc, credit, debit) {
-        return new Promise(function (resolve, reject) {
-            var params = [
-                date = (date) ? date : null,
-                desc = (desc) ? desc : null,
-                credit = (credit) ? credit : null,
-                debit = (debit) ? debit : null,
-            ]
+    isDuplicate: function (row, callback) {
+        var params = [
+            row.date,
+            row.description
+        ];
 
-            var sql = 'SELECT IF(COUNT(*) > 0, true, false) AS duplicate ' +
-                'WHERE date = ? ' +
-                'AND description = ? ' +
-                'AND credit = ? ' +
-                'AND debit = ?';
+        if(row.credit) {
+            params.push(row.credit)
+        }
 
-            mysql.query(sql, params, function (err, rows) {
-                if (err) {
-                    reject(err)
+        if(row.debit){
+            params.push(row.debit)
+        }
+
+        var sql = 'SELECT IF(COUNT(*) > 0, true, false) AS duplicate ' +
+            'FROM transactions ' +
+            'WHERE `date` = ? ';
+
+        sql += (row.description) ? 'AND `description` = ? ' : '';
+        sql += (row.credit) ? 'AND `credit` = ? ' : '';
+        sql += (row.debit) ? 'AND `debit` = ?' : '';
+
+        mysql.debug(sql, params, function (data) {
+            console.log(data)
+        });
+
+        mysql.query(sql, params, function (err, rows) {
+            if (err) {
+                callback(err)
+            }
+
+            if (!err) {
+                if (rows[0].duplicate) {
+                    var err = {
+                        code: 'Row exists'
+                    };
+
+                    callback(err);
                 }
 
-                if (!err) {
-                    if (rows[0].duplicate) {
-                        var err = {
-                            code: 'Row exists'
-                        }
-
-                        reject(err);
-                    }
-
-                    if (!rows[0].duplicate) {
-                        resolve()
-                    }
+                if (!rows[0].duplicate) {
+                    callback(null)
                 }
-            });
-        })
+            }
+        });
     }
 };
