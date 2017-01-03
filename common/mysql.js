@@ -25,6 +25,11 @@ connection.connect(function (err) {
 module.exports = {
     debug: function (sql, params, callback) {
         sql = sql.split('?');
+
+        if(!sql[sql.length -1]){
+            sql.splice([sql.length -1], 1)
+        }
+
         var resp = '';
 
         for(var i = 0; i < sql.length; i++){
@@ -45,6 +50,6 @@ module.exports = {
             }
         });
 
-        connection.end();
+      //  connection.end();
     }
 };
