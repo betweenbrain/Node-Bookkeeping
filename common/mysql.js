@@ -50,6 +50,6 @@ module.exports = {
             }
         });
 
-      //  connection.end();
+      connection.release();
     }
 };
