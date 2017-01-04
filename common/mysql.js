@@ -5,14 +5,15 @@
 const config = require('../config');
 const mysql = require('mysql');
 
-var pool =  mysql.createPool({
-    host        : config.mysql.host,
-    user        : config.mysql.user,
-    password    : config.mysql.password,
-    database    : config.mysql.database
+var pool = mysql.createPool({
+    debug   : config.mysql.debug,
+    host    : config.mysql.host,
+    user    : config.mysql.user,
+    password: config.mysql.password,
+    database: config.mysql.database
 });
 
-pool.getConnection(function(err, connection) {
+pool.getConnection(function (err, connection) {
     if (err) {
         console.error('error connecting: ' + err.stack);
         return;
@@ -28,13 +29,13 @@ module.exports = {
     debug: function (sql, params, callback) {
         sql = sql.split('?');
 
-        if(!sql[sql.length -1]){
-            sql.splice([sql.length -1], 1)
+        if (!sql[sql.length - 1]) {
+            sql.splice([sql.length - 1], 1)
         }
 
         var resp = '';
 
-        for(var i = 0; i < sql.length; i++){
+        for (var i = 0; i < sql.length; i++) {
             resp += sql[i] + params[i]
         }
 

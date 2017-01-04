@@ -58,9 +58,9 @@ if (process.argv.length == 2) {
 
                 if (!err) {
                     // Format date as MySQL DATE format
-                    params.push(row.date)
+                    params.push((line[1] == '') ? null : moment(line[1]).format('YYYY-MM-DD'));
                     // Set as NULL if empty string
-                    params.push(row.check);
+                    params.push(line[2] = (line[2] == '') ? null : line[2]);
                     params.push(line[3] = (line[3] == '') ? null : line[3]);
                     params.push(line[4] = (line[4] == '') ? null : line[4]);
                     params.push(line[5] = (line[5] == '') ? null : line[5]);
@@ -90,12 +90,6 @@ if (process.argv.length == 2) {
 
     rl.on('close', function () {
         sql += ';'
-
-        /*
-         mysql.debug(sql, params, function (data) {
-         console.log(data)
-         });
-         */
 
         mysql.query(sql, params, function (err, rows) {
             if (err) {

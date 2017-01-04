@@ -1,6 +1,7 @@
 {
     "mysql": {
         "database": "node_bookkeeping",
+        "debug"   : false,
         "host"    : "localhost",
         "password": "",
         "port"    : "3306",
