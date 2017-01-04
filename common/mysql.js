@@ -5,21 +5,23 @@
 const config = require('../config');
 const mysql = require('mysql');
 
-var connection = mysql.createConnection({
+var pool =  mysql.createPool({
     host        : config.mysql.host,
     user        : config.mysql.user,
     password    : config.mysql.password,
-    database    : config.mysql.database,
-    insecureAuth: true
+    database    : config.mysql.database
 });
 
-connection.connect(function (err) {
+pool.getConnection(function(err, connection) {
     if (err) {
         console.error('error connecting: ' + err.stack);
         return;
     }
 
-    console.log('connected as id ' + connection.threadId);
+    if (!err) {
+        console.log('connected as id ' + connection.threadId);
+        connection.release();
+    }
 });
 
 module.exports = {
@@ -40,16 +42,18 @@ module.exports = {
     },
 
     query: function (sql, params, callback) {
-        connection.query(sql, params, function (err, rows) {
-            if (err) {
-                callback(err)
-            }
+        pool.getConnection(function (err, connection) {
+            connection.query(sql, params, function (err, rows) {
+                if (err) {
+                    callback(err)
+                }
 
-            if (!err) {
-                callback(null, rows)
-            }
-        });
+                if (!err) {
+                    callback(null, rows)
+                }
 
-      connection.release();
+                connection.release();
+            });
+        })
     }
 };
