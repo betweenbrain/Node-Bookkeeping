@@ -1,0 +1,5 @@
+{
+  "maybeDuplicate": "Possible Duplicate Transaction",
+  "imported": "Transaction Imported",
+  "isDuplicate":"Duplicate Row Detected"
+}

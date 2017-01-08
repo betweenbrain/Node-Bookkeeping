@@ -2,106 +2,184 @@
  * Created by mthomas on 1/2/17.
  */
 
-const moment = require('moment');
-const mysql = require('../common/mysql');
+const moment  = require('moment');
+const mysql   = require('../common/mysql');
 const Promise = require('promise');
+const strings = require('../strings');
 
-var formatHeader = function (i, header, line, obj) {
+var checkDuplicate = function (row) {
     return new Promise(function (resolve, reject) {
-        header = header.toLowerCase();
+        var params = [
+            row.date,
+            row.description,
+            strings.imported
+        ];
 
-        if (header.indexOf('date') >= 0) {
-            obj['date'] = (line[i] == '') ? null : moment(line[i]).format('YYYY-MM-DD');
-
-            resolve(obj)
+        if (row.credit) {
+            params.push(row.credit)
         }
 
-        if (header.indexOf('date') == -1) {
-            var parts = header.split(' ');
-            var str = parts[0];
+        if (row.debit) {
+            params.push(row.debit)
+        }
 
-            for (var j = 1; j < parts.length; j++) {
-                str += parts[j].substring(0, 1).toUpperCase();
-                str += parts[j].substring(1, parts[j].length);
+        var sql = 'SELECT IF(COUNT(*) > 0, true, false) AS duplicate ' +
+            'FROM transactions ' +
+            'WHERE date = ? ' +
+            'AND description = ? ' +
+            'AND status = ? ';
 
-                if (j == parts.length - 1) {
-                    obj[str] = (line[i] == '') ? null : line[i];
+        if (row.credit) {
+            sql += 'AND credit = ? ';
+        }
 
-                    resolve(obj)
+        if (row.debit) {
+            sql += 'AND debit = ? ';
+        }
+
+        mysql.query(sql, params, function (err, rows) {
+            if (err) {
+                reject(err)
+            }
+
+            if (!err) {
+                if (rows[0].duplicate) {
+                    reject(strings.isDuplicate)
+                }
+
+                if (!rows[0].duplicate) {
+                    resolve(row)
                 }
             }
-        }
+        })
     });
 };
 
-module.exports = {
+var getCategory = function (row) {
+    return new Promise(function (resolve, reject) {
+        var params = [
+            row.description,
+            row.description
+        ];
 
-    /**
-     * Convert row to object
-     *
-     * @param headers
-     * @param line
-     * @param callback
-     */
-    lineObj: function (headers, line, callback) {
-        var obj = {};
-        var promises = headers.map(function (header, i) {
-                return formatHeader(i, header, line, obj)
+        var sql = 'SELECT category ' +
+            'FROM transactions ' +
+            'WHERE description = ? ' +
+            'AND EXISTS ' +
+            '(' +
+            'SELECT category ' +
+            'FROM transactions ' +
+            'WHERE description = ?' +
+            ');';
+
+        mysql.query(sql, params, function (err, rows) {
+            if (err) {
+                reject(err)
             }
-        );
 
-        var results = Promise.all(promises);
+            if (!err) {
+                row.category = (rows.length > 0)
+                    ? rows[0].category
+                    : null;
 
-        results
-            .then(function (data) {
-                callback(data)
-            });
-    },
-
-    /**
-     * Check if row already exists in DB
-     *
-     * @param date
-     * @param desc
-     * @param credit
-     * @param debit
-     * @returns {Promise}
-     */
-    isDuplicate: function (row) {
-        return new Promise(function (resolve, reject) {
-            var params = [
-                row.date,
-                row.description,
-                row.credit,
-                row.debit
-            ];
-
-            var sql = 'SELECT IF(COUNT(*) > 0, true, false) AS duplicate ' +
-                'FROM transactions ' +
-                'WHERE date = ? ' +
-                'AND description = ? ' +
-                'AND credit = ? ' +
-                'AND debit = ?';
-
-            mysql.query(sql, params, function (err, rows) {
-                if (err) {
-                    reject(err)
-                }
-
-                if (!err) {
-                    if (rows[0].duplicate) {
-                        var err = {
-                            code: 'Row exists'
-                        };
-
-                        reject(err);
-                    }
-
-                    if (!rows[0].duplicate) {
-                        resolve()
-                    }
-                }
-            });
+                resolve(row)
+            }
         })
+    })
+};
+
+var getStatus = function (row) {
+    return new Promise(function (resolve, reject) {
+        var params = [
+            strings.maybeDuplicate,
+            strings.imported,
+            row.credit,
+            row.date,
+            row.debit,
+            row.description
+        ];
+
+        var sql = 'SELECT IF(COUNT(*) > 0, ?, ?) AS status ' +
+            'FROM transactions ' +
+            'WHERE EXISTS ' +
+            '(' +
+            'SELECT category ' +
+            'FROM transactions ' +
+            'WHERE credit = ? ' +
+            'AND date = ? ' +
+            'AND debit = ? ' +
+            'AND description = ?' +
+            ');';
+
+        mysql.query(sql, params, function (err, rows) {
+            if (err) {
+                reject(err)
+            }
+
+            if (!err) {
+                row.status = rows[0].status;
+
+                resolve(row)
+            }
+        })
+    })
+};
+
+var importRow = function (row) {
+    return new Promise(function (resolve, reject) {
+        var params = [
+            row.balance,
+            row.category,
+            row.check,
+            row.credit,
+            row.date,
+            row.debit,
+            row.description,
+            row.status
+        ];
+
+        var sql = 'INSERT INTO transactions ( ' +
+            '`balance`, ' +
+            '`category`, ' +
+            '`check`, ' +
+            '`credit`, ' +
+            '`date`, ' +
+            '`debit`, ' +
+            '`description`, ' +
+            '`status`) ' +
+            'VALUES ( ' +
+            '?, ' +
+            '?, ' +
+            '?, ' +
+            '?, ' +
+            '?, ' +
+            '?, ' +
+            '?, ' +
+            '?);';
+
+        mysql.query(sql, params, function (err, rows) {
+            if (err) {
+                reject(err)
+            }
+
+            if (!err) {
+                resolve(row)
+            }
+        })
+    })
+};
+
+module.exports = {
+    processRow: function (row, callback) {
+        checkDuplicate(row)
+            .then(getCategory)
+            .then(getStatus)
+            .then(importRow)
+            .then(function (data) {
+                callback(null, data)
+            })
+            .catch(function (err) {
+                callback(err)
+            });
     }
 };

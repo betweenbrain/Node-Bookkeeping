@@ -10,27 +10,16 @@
 var headers;
 var i = 0;
 
-const fs = require('fs');
-const moment = require('moment');
-const mysql = require('./common/mysql');
+const fs       = require('fs');
+const moment   = require('moment');
+const mysql    = require('./common/mysql');
 const readline = require('readline');
-var rowModel = require('./models/rowModel');
-const rl = readline.createInterface({
+var rowModel   = require('./models/rowModel');
+const rl       = readline.createInterface({
     input: fs.createReadStream('AccountHistory.csv')
 });
 
 if (process.argv.length == 2) {
-    var params = [];
-    var sql = 'INSERT INTO transactions ( ' +
-        '`date`, ' +
-        '`check`, ' +
-        '`description`, ' +
-        '`debit`, ' +
-        '`credit`, ' +
-        '`status`, ' +
-        '`balance`) ' +
-        'VALUES ';
-
     rl.on('line', function (line) {
         line = line
             .replace(/"/g, '')
@@ -40,7 +29,7 @@ if (process.argv.length == 2) {
             headers = line;
         }
 
-        if (i == 1) {
+        if (i >= 1) {
             var row = {
                 date       : (line[1] == '') ? null : moment(line[1]).format('YYYY-MM-DD'),
                 check      : (line[2] == '') ? null : line[2],
@@ -51,36 +40,12 @@ if (process.argv.length == 2) {
                 balance    : (line[7] == '') ? null : line[7]
             };
 
-            rowModel.isDuplicate(row, function (err) {
+            rowModel.processRow(row, function (err, data) {
                 if (err) {
-                    console.log(err)
+                    // console.log(err)
                 }
-
                 if (!err) {
-                    // Format date as MySQL DATE format
-                    params.push((line[1] == '') ? null : moment(line[1]).format('YYYY-MM-DD'));
-                    // Set as NULL if empty string
-                    params.push(line[2] = (line[2] == '') ? null : line[2]);
-                    params.push(line[3] = (line[3] == '') ? null : line[3]);
-                    params.push(line[4] = (line[4] == '') ? null : line[4]);
-                    params.push(line[5] = (line[5] == '') ? null : line[5]);
-                    params.push(line[6] = (line[6] == '') ? null : line[6]);
-                    params.push(line[7] = (line[7] == '') ? null : line[7]);
-
-
-                    if (i >= 2) {
-                        sql += ', ';
-                    }
-
-                    sql += '( ' +
-                    '?, ' +
-                    '?, ' +
-                    '?, ' +
-                    '?, ' +
-                    '?, ' +
-                    '?, ' +
-                    '? ' +
-                    ')';
+                    // console.log('Imported row ' + i)
                 }
             });
         }
@@ -89,31 +54,21 @@ if (process.argv.length == 2) {
     });
 
     rl.on('close', function () {
-        sql += ';'
-
-        mysql.query(sql, params, function (err, rows) {
-            if (err) {
-                console.log(err)
-            }
-
-            if (!err) {
-                console.log(rows)
-            }
-        });
+        // process.exit(0);
     })
 }
 
 if (process.argv.indexOf('--create') >= 0) {
     var sql = 'CREATE TABLE IF NOT EXISTS transactions ( ' +
         '`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ' +
-        '`date` DATE NULL, ' +
-        '`check` INT NULL, ' +
-        '`description` VARCHAR(255) NULL, ' +
-        '`debit` DECIMAL(8, 2) NULL, ' +
-        '`credit` DECIMAL(8,2) NULL, ' +
-        '`status` VARCHAR(156) NULL, ' +
         '`balance` DECIMAL(12, 2) NULL,' +
-        '`category` VARCHAR(156) NULL ' +
+        '`category` VARCHAR(128) NULL, ' +
+        '`check` INT NULL, ' +
+        '`credit` DECIMAL(8,2) NULL, ' +
+        '`date` DATE NULL, ' +
+        '`debit` DECIMAL(8, 2) NULL, ' +
+        '`description` VARCHAR(255) NULL, ' +
+        '`status` VARCHAR(128) NULL ' +
         ') ENGINE=INNODB;';
 
     mysql.query(sql, null, function (err, rows) {
