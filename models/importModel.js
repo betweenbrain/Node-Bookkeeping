@@ -37,8 +37,7 @@ module.exports = {
                     date       : (line[1] == '') ? null : moment(line[1]).format('YYYY-MM-DD'),
                     check      : (line[2] == '') ? null : line[2],
                     description: (line[3] == '') ? null : line[3],
-                    debit      : (line[4] == '') ? null : line[4],
-                    credit     : (line[5] == '') ? null : line[5],
+                    amount     : (line[4] == '') ? line[5] : -Math.abs(line[4]),
                     status     : (line[6] == '') ? null : line[6],
                     balance    : (line[7] == '') ? null : line[7]
                 };
@@ -48,7 +47,7 @@ module.exports = {
                         // console.log(err)
                     }
                     if (!err) {
-                        rows ++;
+                        rows++;
                     }
                 });
             }

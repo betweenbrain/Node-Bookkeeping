@@ -13,12 +13,11 @@ module.exports = {
     create: function (callback) {
         var sql = 'CREATE TABLE IF NOT EXISTS transactions ( ' +
             '`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ' +
+            '`amount` DECIMAL(8,2) NULL, ' +
             '`balance` DECIMAL(12, 2) NULL,' +
             '`category` VARCHAR(128) NULL, ' +
             '`check` INT NULL, ' +
-            '`credit` DECIMAL(8,2) NULL, ' +
             '`date` DATE NULL, ' +
-            '`debit` DECIMAL(8, 2) NULL, ' +
             '`description` VARCHAR(255) NULL, ' +
             '`status` VARCHAR(128) NULL ' +
             ') ENGINE=INNODB;';

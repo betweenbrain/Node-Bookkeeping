@@ -10,32 +10,18 @@ const strings = require('../strings');
 var checkDuplicate = function (row) {
     return new Promise(function (resolve, reject) {
         var params = [
+            row.amount,
             row.date,
             row.description,
             strings.imported
         ];
 
-        if (row.credit) {
-            params.push(row.credit)
-        }
-
-        if (row.debit) {
-            params.push(row.debit)
-        }
-
         var sql = 'SELECT IF(COUNT(*) > 0, true, false) AS duplicate ' +
             'FROM transactions ' +
-            'WHERE date = ? ' +
+            'WHERE amount = ? ' +
+            'AND date = ? ' +
             'AND description = ? ' +
             'AND status = ? ';
-
-        if (row.credit) {
-            sql += 'AND credit = ? ';
-        }
-
-        if (row.debit) {
-            sql += 'AND debit = ? ';
-        }
 
         mysql.query(sql, params, function (err, rows) {
             if (err) {
@@ -93,9 +79,8 @@ var getStatus = function (row) {
         var params = [
             strings.maybeDuplicate,
             strings.imported,
-            row.credit,
+            row.amount,
             row.date,
-            row.debit,
             row.description
         ];
 
@@ -105,9 +90,8 @@ var getStatus = function (row) {
             '(' +
             'SELECT category ' +
             'FROM transactions ' +
-            'WHERE credit = ? ' +
+            'WHERE amount = ? ' +
             'AND date = ? ' +
-            'AND debit = ? ' +
             'AND description = ?' +
             ');';
 
@@ -128,27 +112,24 @@ var getStatus = function (row) {
 var importRow = function (row) {
     return new Promise(function (resolve, reject) {
         var params = [
+            row.amount,
             row.balance,
             row.category,
             row.check,
-            row.credit,
             row.date,
-            row.debit,
             row.description,
             row.status
         ];
 
         var sql = 'INSERT INTO transactions ( ' +
+            '`amount`, ' +
             '`balance`, ' +
             '`category`, ' +
             '`check`, ' +
-            '`credit`, ' +
             '`date`, ' +
-            '`debit`, ' +
             '`description`, ' +
             '`status`) ' +
             'VALUES ( ' +
-            '?, ' +
             '?, ' +
             '?, ' +
             '?, ' +
