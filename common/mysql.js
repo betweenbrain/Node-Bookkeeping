@@ -3,15 +3,11 @@
  */
 
 const config = require('../config');
-const mysql = require('mysql');
+const mysql  = require('mysql');
 
-var pool = mysql.createPool({
-    debug   : config.mysql.debug,
-    host    : config.mysql.host,
-    user    : config.mysql.user,
-    password: config.mysql.password,
-    database: config.mysql.database
-});
+var pool = mysql.createPool(
+    config.mysql
+);
 
 pool.getConnection(function (err, connection) {
     if (err) {

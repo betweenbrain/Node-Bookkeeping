@@ -1,10 +1,11 @@
 {
-    "mysql": {
-        "database": "node_bookkeeping",
-        "debug"   : false,
-        "host"    : "localhost",
-        "password": "",
-        "port"    : "3306",
-        "user"    : "root"
-    }
+  "mysql": {
+    "dateStrings": true,
+    "database": "node_bookkeeping",
+    "debug": false,
+    "host": "localhost",
+    "password": "",
+    "port": "3306",
+    "user": "root"
+  }
 }
