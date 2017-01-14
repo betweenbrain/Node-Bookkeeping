@@ -1,11 +1,13 @@
 {
   "mysql": {
+    "bigNumberStrings": true,
     "dateStrings": true,
     "database": "node_bookkeeping",
     "debug": false,
     "host": "localhost",
     "password": "",
     "port": "3306",
+    "supportBigNumbers": true,
     "user": "root"
   }
 }
