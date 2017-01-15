@@ -45,5 +45,20 @@ module.exports = {
                 callback(null, rows)
             }
         })
+    },
+
+    dropNull: function (callback) {
+        var sql = 'DELETE FROM transactions ' +
+            'WHERE category IS NULL';
+
+        mysql.query(sql, null, function (err, rows) {
+            if (err) {
+                callback(err)
+            }
+
+            if (!err) {
+                callback(null, rows)
+            }
+        })
     }
-}
+};

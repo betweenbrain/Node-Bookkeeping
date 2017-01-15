@@ -33,4 +33,16 @@ module.exports = function (app) {
             }
         })
     });
+
+    app.get('/drop/null', function (req, res) {
+        adminModel.dropNull(function (err, data) {
+            if (err) {
+                res.status(400);
+                res.render('index', {message: err});
+            }
+            if (!err) {
+                res.render('index', {message: data});
+            }
+        })
+    });
 };
