@@ -2,23 +2,31 @@
     <thead>
     <tr class="row">
         <th class="col-md-1">Date</th>
-        <th class="col-md-4">Description</th>
+        <th class="col-md-3">Description</th>
+        <th class="col-md-3">Category</th>
         <th class="col-md-1">Amount</th>
         <th class="col-md-1">Balance</th>
-        <th class="col-md-3">Category</th>
         <th class="col-md-2">Status</th>
+        <th class="col-md-1">Actions</th>
     </tr>
     </thead>
     <tbody>
     {{#rows}}
-    <tr class="row">
-        <td class="col-md-1">{{date}}</td>
-        <td class="col-md-4">{{description}}</td>
-        <td class="col-md-1">{{amount}}</td>
-        <td class="col-md-1">{{balance}}</td>
-        <td class="col-md-3">{{category}}</td>
-        <td class="col-md-2">{{status}}</td>
-    </tr>
+        <tr class="row">
+            <form action="/item" method="get">
+                <td class="col-md-1">{{date}}</td>
+                <td class="col-md-3">{{description}}</td>
+                <td class="col-md-3"><input type="text" name="category" value="{{category}}"></td>
+                <td class="col-md-1">{{amount}}</td>
+                <td class="col-md-1">{{balance}}</td>
+                <td class="col-md-2">{{status}}</td>
+                <td class="col-md-1">
+                    <input type="submit" name="action" value="update"/>
+                    <input type="submit" name="action" value="delete"/>
+                </td>
+                <input type="hidden" name="id" value="{{id}}"/>
+            </form>
+        </tr>
     {{/rows}}
     </tbody>
 </table>
