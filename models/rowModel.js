@@ -29,11 +29,11 @@ var checkDuplicate = function (row) {
             }
 
             if (!err) {
-                if (rows[0].duplicate) {
+                if (rows[0].duplicate == 1) {
                     reject(strings.isDuplicate)
                 }
 
-                if (!rows[0].duplicate) {
+                if (rows[0].duplicate == 0) {
                     resolve(row)
                 }
             }
