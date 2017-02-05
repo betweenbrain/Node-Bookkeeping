@@ -61,9 +61,9 @@ module.exports = {
                     'Books, Music, Movies & DVDs',
                     'Pharmacy & Prescriptions',
                     'Television',
-                    'Utilities- Electricity',
-                    'Utilities- Trash',
-                    'Utilities- Propane',
+                    'Utilities - Electricity',
+                    'Utilities - Trash',
+                    'Utilities - Propane',
                     'Charitable Gifts',
                     'Apps, software',
                     'Membership Dues',
@@ -94,7 +94,8 @@ module.exports = {
                     'Parking',
                     'Vehicle Purchase and Loans',
                     'Other Transportation',
-                    'Total Operating Expenses'
+                    'Total Operating Expenses',
+                    'Income - Salaries'
                 ];
 
                 var sql = 'INSERT INTO category (`name`) ' +
