@@ -15,7 +15,7 @@ module.exports = {
             '`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ' +
             '`amount` DECIMAL(8,2) NULL, ' +
             '`balance` DECIMAL(12, 2) NULL,' +
-            '`category` VARCHAR(128) NULL, ' +
+            '`category` INT NULL, ' +
             '`check` INT NULL, ' +
             '`date` DATE NULL, ' +
             '`description` VARCHAR(255) NULL, ' +
@@ -34,10 +34,10 @@ module.exports = {
     },
 
     createCatTable: function (callback) {
-        'CREATE TABLE IF NOT EXISTS category ( ' +
-        '`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ' +
-        '`name` VARCHAR(255) NOT NULL ' +
-        ') ENGINE=INNODB;';
+        var sql = 'CREATE TABLE IF NOT EXISTS category ( ' +
+            '`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ' +
+            '`name` VARCHAR(255) NOT NULL UNIQUE ' +
+            ') ENGINE=INNODB;';
 
         mysql.query(sql, null, function (err, rows) {
             if (err) {
@@ -109,13 +109,17 @@ module.exports = {
 
                 }
 
+                mysql.debug(sql, params, function (data) {
+                    console.log(data)
+                })
+
                 mysql.query(sql, params, function (err, rows) {
                     if (err) {
-                        reject(err)
+                        callback(err)
                     }
 
                     if (!err) {
-                        resolve(row)
+                        callback(null, rows)
                     }
                 })
             }
