@@ -11,7 +11,7 @@ const mysql = require('../common/mysql');
 
 module.exports = {
     list: function (callback) {
-        var sql = 'SELECT id, date, description, amount, balance, category, status FROM transactions';
+        var sql = 'SELECT id, date, description, amount, balance, category, status FROM transaction';
 
         mysql.query(sql, null, function (err, rows) {
             if (err) {

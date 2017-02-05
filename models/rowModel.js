@@ -17,7 +17,7 @@ var checkDuplicate = function (row) {
         ];
 
         var sql = 'SELECT IF(COUNT(*) > 0, true, false) AS duplicate ' +
-            'FROM transactions ' +
+            'FROM transaction ' +
             'WHERE amount = ? ' +
             'AND date = ? ' +
             'AND description = ? ' +
@@ -49,12 +49,12 @@ var getCategory = function (row) {
         ];
 
         var sql = 'SELECT category ' +
-            'FROM transactions ' +
+            'FROM transaction ' +
             'WHERE description = ? ' +
             'AND EXISTS ' +
             '(' +
             'SELECT category ' +
-            'FROM transactions ' +
+            'FROM transaction ' +
             'WHERE description = ?' +
             ');';
 
@@ -85,11 +85,11 @@ var getStatus = function (row) {
         ];
 
         var sql = 'SELECT IF(COUNT(*) > 0, ?, ?) AS status ' +
-            'FROM transactions ' +
+            'FROM transaction ' +
             'WHERE EXISTS ' +
             '(' +
             'SELECT category ' +
-            'FROM transactions ' +
+            'FROM transaction ' +
             'WHERE amount = ? ' +
             'AND date = ? ' +
             'AND description = ?' +
@@ -121,7 +121,7 @@ var importRow = function (row) {
             row.status
         ];
 
-        var sql = 'INSERT INTO transactions ( ' +
+        var sql = 'INSERT INTO transaction ( ' +
             '`amount`, ' +
             '`balance`, ' +
             '`category`, ' +

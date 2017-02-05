@@ -18,7 +18,7 @@ module.exports = {
                     req.query.id
                 ];
 
-                var sql = 'UPDATE transactions ' +
+                var sql = 'UPDATE transaction ' +
                     'SET category = ? ' +
                     'WHERE id = ?';
 
@@ -37,7 +37,7 @@ module.exports = {
                     req.query.id
                 ];
 
-                var sql = 'DELETE from transactions ' +
+                var sql = 'DELETE from transaction ' +
                     'WHERE id = ?';
 
                 mysql.query(sql, params, function (err, rows) {
