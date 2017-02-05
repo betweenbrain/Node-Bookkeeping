@@ -11,7 +11,7 @@ var adminModel = require('../models/adminModel');
 
 module.exports = function (app) {
     app.get('/create', function (req, res) {
-        adminModel.create(function (err, data) {
+        adminModel.createTransTable(function (err, data) {
             if (err) {
                 res.status(400);
                 res.render('index', {message: err});
@@ -23,7 +23,7 @@ module.exports = function (app) {
     });
 
     app.get('/drop', function (req, res) {
-        adminModel.drop(function (err, data) {
+        adminModel.dropTransTable(function (err, data) {
             if (err) {
                 res.status(400);
                 res.render('index', {message: err});
@@ -35,7 +35,7 @@ module.exports = function (app) {
     });
 
     app.get('/drop/null', function (req, res) {
-        adminModel.dropNull(function (err, data) {
+        adminModel.dropTransTableNull(function (err, data) {
             if (err) {
                 res.status(400);
                 res.render('index', {message: err});

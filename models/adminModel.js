@@ -10,7 +10,7 @@
 const mysql = require('../common/mysql');
 
 module.exports = {
-    create: function (callback) {
+    createTransTable: function (callback) {
         var sql = 'CREATE TABLE IF NOT EXISTS transactions ( ' +
             '`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ' +
             '`amount` DECIMAL(8,2) NULL, ' +
@@ -33,7 +33,7 @@ module.exports = {
         })
     },
 
-    drop: function (callback) {
+    dropTransTable: function (callback) {
         var sql = 'DROP TABLE transactions;';
 
         mysql.query(sql, null, function (err, rows) {
@@ -47,7 +47,7 @@ module.exports = {
         })
     },
 
-    dropNull: function (callback) {
+    dropTransTableNull: function (callback) {
         var sql = 'DELETE FROM transactions ' +
             'WHERE category IS NULL';
 
