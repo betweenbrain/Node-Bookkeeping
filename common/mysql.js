@@ -23,19 +23,15 @@ pool.getConnection(function (err, connection) {
 
 module.exports = {
     debug: function (sql, params, callback) {
-        sql = sql.split('?');
+        if (sql.indexOf('?') >= 0) {
+            var matches = sql.match(/\?/g).length;
 
-        if (!sql[sql.length - 1]) {
-            sql.splice([sql.length - 1], 1)
+            for (var i = 0; i <= matches; i++) {
+                sql = sql.replace(/\?/, '"' + params[i] + '"')
+            }
         }
 
-        var resp = '';
-
-        for (var i = 0; i < sql.length; i++) {
-            resp += sql[i] + params[i]
-        }
-
-        callback(resp)
+        callback(sql)
     },
 
     query: function (sql, params, callback) {
