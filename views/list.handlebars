@@ -11,12 +11,20 @@
     </tr>
     </thead>
     <tbody>
-    {{#rows}}
+    {{#each rows}}
         <tr class="row">
             <form action="/item" method="get">
                 <td class="col-md-1">{{date}}</td>
                 <td class="col-md-4">{{description}}</td>
-                <td class="col-md-2"><input type="text" name="category" value="{{category}}"></td>
+                <td class="col-md-2">
+                    <select name="category">
+                        {{#if category}}
+                            <option value="{{category}}" selected>{{categoryName}}</option>
+                        {{/if}}
+                        {{#each ../cats}}
+                            <option value="{{catId}}">{{catName}}</option>
+                        {{/each}}
+                    </select>
                 <td class="col-md-1">{{amount}}</td>
                 <td class="col-md-1">{{balance}}</td>
                 <td class="col-md-2">{{status}}</td>
@@ -31,6 +39,6 @@
                 <input type="hidden" name="id" value="{{id}}"/>
             </form>
         </tr>
-    {{/rows}}
+    {{/each}}
     </tbody>
 </table>

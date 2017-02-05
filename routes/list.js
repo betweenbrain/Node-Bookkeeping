@@ -17,7 +17,10 @@ module.exports = function (app) {
                 res.render('index', {message: err});
             }
             if (!err) {
-                res.render('list', {rows: data});
+                res.render('list', {
+                    rows: data.trans,
+                    cats: data.cats
+                });
             }
         })
     });

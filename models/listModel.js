@@ -11,16 +11,40 @@ const mysql = require('../common/mysql');
 
 module.exports = {
     list: function (callback) {
-        var sql = 'SELECT id, date, description, amount, balance, category, status FROM transaction';
+        var sql = 'SELECT id, date, description, amount, balance, category, status, ' +
+            '(SELECT c.name ' +
+            'FROM category AS c ' +
+            'JOIN transaction AS t ' +
+            'ON t.category = c.id ' +
+            'WHERE t.category ' +
+            'IS NOT NULL ' +
+            'AND t.id = transaction.id ' +
+            ') as categoryName ' +
+            'FROM transaction';
 
-        mysql.query(sql, null, function (err, rows) {
+        mysql.query(sql, null, function (err, trans) {
             if (err) {
                 callback(err)
             }
 
             if (!err) {
-                callback(null, rows)
+                var sql = 'SELECT id AS catId, name AS catName FROM category';
+
+                mysql.query(sql, null, function (err, cats) {
+                    if (err) {
+                        callback(err)
+                    }
+
+                    if (!err) {
+                        var results = {
+                            cats : cats,
+                            trans: trans
+                        };
+
+                        callback(null, results)
+                    }
+                })
             }
         })
     }
-}
+};
