@@ -10,7 +10,7 @@
 var adminModel = require('../models/adminModel');
 
 module.exports = function (app) {
-    app.get('/create', function (req, res) {
+    app.get('/create/table/transaction', function (req, res) {
         adminModel.createTransTable(function (err, data) {
             if (err) {
                 res.status(400);
@@ -22,7 +22,7 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/drop', function (req, res) {
+    app.get('/drop/table/transaction', function (req, res) {
         adminModel.dropTransTable(function (err, data) {
             if (err) {
                 res.status(400);
@@ -34,7 +34,7 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/drop/null', function (req, res) {
+    app.get('/drop/table/transaction/null', function (req, res) {
         adminModel.dropTransTableNull(function (err, data) {
             if (err) {
                 res.status(400);
