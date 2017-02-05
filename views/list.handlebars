@@ -20,6 +20,8 @@
                     <select name="category">
                         {{#if category}}
                             <option value="{{category}}" selected>{{categoryName}}</option>
+                        {{else}}
+                            <option></option>
                         {{/if}}
                         {{#each ../cats}}
                             <option value="{{catId}}">{{catName}}</option>
