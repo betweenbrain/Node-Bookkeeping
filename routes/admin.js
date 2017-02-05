@@ -22,6 +22,18 @@ module.exports = function (app) {
         })
     });
 
+    app.get('/create/table/category', function (req, res) {
+        adminModel.createCatTable(function (err, data) {
+            if (err) {
+                res.status(400);
+                res.render('index', {message: err});
+            }
+            if (!err) {
+                res.render('index', {message: data});
+            }
+        })
+    });
+
     app.get('/drop/table/transaction', function (req, res) {
         adminModel.dropTransTable(function (err, data) {
             if (err) {
