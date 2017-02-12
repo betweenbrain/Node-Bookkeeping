@@ -1,0 +1,16 @@
+<table class="table table-striped">
+    <thead>
+    <tr class="row">
+        <th class="col-md-3">Category</th>
+        <th class="col-md-3">Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each rows}}
+        <tr class="row">
+                <td class="col-md-1">{{category}}</td>
+                <td class="col-md-4">{{amount}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
