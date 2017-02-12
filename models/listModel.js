@@ -20,7 +20,8 @@ module.exports = {
             'IS NOT NULL ' +
             'AND t.id = transaction.id ' +
             ') as categoryName ' +
-            'FROM transaction';
+            'FROM transaction ' +
+            'ORDER BY date DESC';
 
         mysql.query(sql, null, function (err, trans) {
             if (err) {
