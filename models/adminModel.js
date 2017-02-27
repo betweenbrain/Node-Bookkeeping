@@ -96,7 +96,8 @@ module.exports = {
                     'Vehicle Purchase and Loans',
                     'Other Transportation',
                     'Total Operating Expenses',
-                    'Income - Salaries'
+                    'Income - Salaries',
+                    'Education Expenses'
                 ];
 
                 var sql = 'INSERT INTO category (`name`) ' +
