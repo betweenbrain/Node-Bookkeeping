@@ -28,6 +28,7 @@ module.exports = {
                     }
 
                     if (!err) {
+                        rows.id = req.query.id;
                         callback(null, rows)
                     }
                 });
@@ -46,6 +47,7 @@ module.exports = {
                     }
 
                     if (!err) {
+                        rows.id = req.query.id;
                         callback(null, rows)
                     }
                 });

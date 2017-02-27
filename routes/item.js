@@ -17,7 +17,7 @@ module.exports = function (app) {
                 res.render('index', {message: err});
             }
             if (!err) {
-                res.redirect('/list');
+                res.redirect('/list#transaction-' + data.id);
             }
         })
     });
