@@ -3,7 +3,7 @@
     "bigNumberStrings": true,
     "dateStrings": true,
     "database": "node_bookkeeping",
-    "debug": true,
+    "debug": false,
     "host": "localhost",
     "password": "",
     "port": "3306",
