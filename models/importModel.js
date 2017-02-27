@@ -34,6 +34,7 @@ module.exports = {
 
             if (i >= 1) {
                 var row = {
+                    account    : line[0],
                     date       : (line[1] == '') ? null : moment(line[1]).format('YYYY-MM-DD'),
                     check      : (line[2] == '') ? null : line[2],
                     description: (line[3] == '') ? null : line[3],

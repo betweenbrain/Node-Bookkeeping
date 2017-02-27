@@ -10,6 +10,7 @@ const strings = require('../strings');
 var checkDuplicate = function (row) {
     return new Promise(function (resolve, reject) {
         var params = [
+            row.account,
             row.amount,
             row.date,
             row.description,
@@ -18,7 +19,8 @@ var checkDuplicate = function (row) {
 
         var sql = 'SELECT IF(COUNT(*) > 0, true, false) AS duplicate ' +
             'FROM transaction ' +
-            'WHERE amount = ? ' +
+            'WHERE account = ? ' +
+            'AND amount = ? ' +
             'AND date = ? ' +
             'AND description = ? ' +
             'AND status = ? ';
@@ -79,6 +81,7 @@ var getStatus = function (row) {
         var params = [
             strings.maybeDuplicate,
             strings.imported,
+            row.account,
             row.amount,
             row.date,
             row.description
@@ -90,7 +93,8 @@ var getStatus = function (row) {
             '(' +
             'SELECT category ' +
             'FROM transaction ' +
-            'WHERE amount = ? ' +
+            'WHERE account = ? ' +
+            'AND amount = ? ' +
             'AND date = ? ' +
             'AND description = ?' +
             ');';
@@ -112,6 +116,7 @@ var getStatus = function (row) {
 var importRow = function (row) {
     return new Promise(function (resolve, reject) {
         var params = [
+            row.account,
             row.amount,
             row.balance,
             row.category,
@@ -122,6 +127,7 @@ var importRow = function (row) {
         ];
 
         var sql = 'INSERT INTO transaction ( ' +
+            '`account`, ' +
             '`amount`, ' +
             '`balance`, ' +
             '`category`, ' +
@@ -130,6 +136,7 @@ var importRow = function (row) {
             '`description`, ' +
             '`status`) ' +
             'VALUES ( ' +
+            '?, ' +
             '?, ' +
             '?, ' +
             '?, ' +

@@ -13,6 +13,7 @@ module.exports = {
     createTransTable: function (callback) {
         var sql = 'CREATE TABLE IF NOT EXISTS transaction ( ' +
             '`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ' +
+            '`account` VARCHAR(64) NOT NULL ' +
             '`amount` DECIMAL(8,2) NULL, ' +
             '`balance` DECIMAL(12, 2) NULL,' +
             '`category` INT NULL, ' +
