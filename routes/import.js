@@ -23,11 +23,6 @@ module.exports = function (app) {
             res.render('index', {message: 'No files were uploaded.'});
         }
 
-
-        for (prop in req) {
-            console.log(prop);
-        }
-
         var importFile = req.files.importFile;
         var filePath   = __dirname + '/../' + importFile.name;
 
