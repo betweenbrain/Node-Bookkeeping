@@ -18,32 +18,34 @@ module.exports = function (app) {
     });
 
     app.post('/', function (req, res) {
-        if (!req.files) {
+        if (!req.files.importFile) {
             res.status(400);
             res.render('index', {message: 'No files were uploaded.'});
         }
 
-        var importFile = req.files.importFile;
-        var filePath   = __dirname + '/../' + importFile.name;
+        if (req.files.importFile) {
+            var importFile = req.files.importFile;
+            var filePath   = __dirname + '/../' + importFile.name;
 
-        // Use the mv() method to place the file somewhere on your server
-        importFile.mv(filePath, function (err) {
-            if (err) {
-                res.status(500);
-                res.render('index', {message: err});
-            }
+            // Use the mv() method to place the file somewhere on your server
+            importFile.mv(filePath, function (err) {
+                if (err) {
+                    res.status(500);
+                    res.render('index', {message: err});
+                }
 
-            if (!err) {
-                importModel.import(filePath, function (err, data) {
-                    if (err) {
-                        res.status(400);
-                        res.render('index', {message: err});
-                    }
-                    if (!err) {
-                        res.render('index', {message: data});
-                    }
-                })
-            }
-        });
+                if (!err) {
+                    importModel.import(filePath, function (err, data) {
+                        if (err) {
+                            res.status(400);
+                            res.render('index', {message: err});
+                        }
+                        if (!err) {
+                            res.render('index', {message: data});
+                        }
+                    })
+                }
+            });
+        }
     });
 };
