@@ -10,15 +10,45 @@
 var importModel = require('../models/importModel');
 
 module.exports = function (app) {
+    const fileUpload = require('express-fileupload');
+    app.use(fileUpload());
+
     app.get('/', function (req, res) {
-        importModel.import(function (err, data) {
+        res.render('import');
+    });
+
+    app.post('/', function (req, res) {
+        if (!req.files) {
+            res.status(400);
+            res.render('index', {message: 'No files were uploaded.'});
+        }
+
+
+        for (prop in req) {
+            console.log(prop);
+        }
+
+        var importFile = req.files.importFile;
+        var filePath   = __dirname + '/../' + importFile.name;
+
+        // Use the mv() method to place the file somewhere on your server
+        importFile.mv(filePath, function (err) {
             if (err) {
-                res.status(400);
+                res.status(500);
                 res.render('index', {message: err});
             }
+
             if (!err) {
-                res.render('index', {message: data});
+                importModel.import(filePath, function (err, data) {
+                    if (err) {
+                        res.status(400);
+                        res.render('index', {message: err});
+                    }
+                    if (!err) {
+                        res.render('index', {message: data});
+                    }
+                })
             }
-        })
+        });
     });
 };

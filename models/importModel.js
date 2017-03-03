@@ -15,10 +15,10 @@ var rowModel   = require('./rowModel');
 
 module.exports = {
 
-    import: function (callback) {
+    import: function (filePath, callback) {
         var i            = 0;
         var rows         = 0;
-        const importFile = require.resolve('../AccountHistory.csv');
+        const importFile = require.resolve(filePath);
         const rl         = readline.createInterface({
             input: fs.createReadStream(importFile)
         });
