@@ -112,10 +112,6 @@ module.exports = {
 
                 }
 
-                mysql.debug(sql, params, function (data) {
-                    console.log(data)
-                })
-
                 mysql.query(sql, params, function (err, rows) {
                     if (err) {
                         callback(err)
@@ -125,6 +121,23 @@ module.exports = {
                         callback(null, rows)
                     }
                 })
+            }
+        })
+    },
+
+    createFilterTable: function (callback) {
+        var sql = 'CREATE TABLE IF NOT EXISTS filter ( ' +
+            '`catId` INT NOT NULL, ' +
+            '`name` VARCHAR(255) NOT NULL ' +
+            ') ENGINE=INNODB;';
+
+        mysql.query(sql, null, function (err, rows) {
+            if (err) {
+                callback(err)
+            }
+
+            if (!err) {
+                callback(null, rows)
             }
         })
     },

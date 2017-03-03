@@ -10,8 +10,8 @@
 var adminModel = require('../models/adminModel');
 
 module.exports = function (app) {
-    app.get('/create/table/transaction', function (req, res) {
-        adminModel.createTransTable(function (err, data) {
+    app.get('/create/table/category', function (req, res) {
+        adminModel.createCatTable(function (err, data) {
             if (err) {
                 res.status(400);
                 res.render('index', {message: err});
@@ -22,8 +22,20 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/create/table/category', function (req, res) {
-        adminModel.createCatTable(function (err, data) {
+    app.get('/create/table/filter', function (req, res) {
+        adminModel.createFilterTable(function (err, data) {
+            if (err) {
+                res.status(400);
+                res.render('index', {message: err});
+            }
+            if (!err) {
+                res.render('index', {message: data});
+            }
+        })
+    });
+
+    app.get('/create/table/transaction', function (req, res) {
+        adminModel.createTransTable(function (err, data) {
             if (err) {
                 res.status(400);
                 res.render('index', {message: err});
