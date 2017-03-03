@@ -12,7 +12,7 @@
     </thead>
     <tbody>
     {{#each rows}}
-        <tr class="row" id="transaction-{{id}}">
+        <tr class="row" id="transaction-{{id}}" {{#unless category}}style="background-color:#d9edf7"{{/unless}}>
             <form action="/item" method="get">
                 <td class="col-md-1">{{date}}</td>
                 <td class="col-md-4">{{description}}</td>
