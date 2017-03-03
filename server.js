@@ -7,14 +7,16 @@
  * Copyright  Copyright (C) 2017 Sears Holdings. All Rights Reserved.
  */
 
-const express  = require('express');
-const enrouten = require('express-enrouten');
-const exphbs   = require('express-handlebars');
-var app        = express();
+const bodyParser = require('body-parser');
+const express    = require('express');
+const enrouten   = require('express-enrouten');
+const exphbs     = require('express-handlebars');
+var app          = express();
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.use(enrouten({directory: 'routes'}));
 
