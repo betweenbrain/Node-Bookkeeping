@@ -128,7 +128,7 @@ module.exports = {
     createFilterTable: function (callback) {
         var sql = 'CREATE TABLE IF NOT EXISTS filter ( ' +
             '`catId` INT NOT NULL, ' +
-            '`name` VARCHAR(255) NOT NULL ' +
+            '`term` VARCHAR(255) NOT NULL ' +
             ') ENGINE=INNODB;';
 
         mysql.query(sql, null, function (err, rows) {
