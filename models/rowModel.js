@@ -76,6 +76,35 @@ var getCategory = function (row) {
     })
 };
 
+var checkFilters = function (row) {
+    return new Promise(function (resolve, reject) {
+        if (row.category != null) {
+            resolve(row);
+        } else {
+            var sql = "SELECT catId, term FROM filter";
+
+            mysql.query(sql, null, function (err, rows) {
+                if (err) {
+                    reject(err)
+                }
+
+                if (!err) {
+                    for (var i = 0; i < rows.length; i++) {
+                        if (row.description.indexOf(rows[i].term) >= 0) {
+                            row.category = rows[i].catId;
+                            resolve(row);
+                            break;
+                        }
+                        if (i == rows.length) {
+                            resolve(row);
+                        }
+                    }
+                }
+            })
+        }
+    })
+};
+
 var getStatus = function (row) {
     return new Promise(function (resolve, reject) {
         var params = [
@@ -161,6 +190,7 @@ module.exports = {
     processRow: function (row, callback) {
         checkDuplicate(row)
             .then(getCategory)
+            .then(checkFilters)
             .then(getStatus)
             .then(importRow)
             .then(function (data) {
