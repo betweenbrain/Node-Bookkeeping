@@ -86,6 +86,7 @@ module.exports = {
                     'Recreation',
                     'Restaurants, Coffee & Bars',
                     'Retirement Investment',
+                    'Retirement Investment Withdrawal',
                     'Television',
                     'Tools & Equipment',
                     'Total Operating Expenses',
