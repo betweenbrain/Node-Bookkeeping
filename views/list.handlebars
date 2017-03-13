@@ -17,7 +17,7 @@
                 <td class="col-md-1">{{date}}</td>
                 <td class="col-md-4">{{description}}</td>
                 <td class="col-md-2">
-                    <select name="category">
+                    <select name="category" onchange="document.getElementById('transaction-{{id}}-update').click();">
                         {{#if category}}
                             <option value="{{category}}" selected>{{categoryName}}</option>
                         {{else}}
@@ -31,7 +31,7 @@
                 <td class="col-md-1">{{balance}}</td>
                 <td class="col-md-2">{{status}}</td>
                 <td class="col-md-1">
-                    <button class="btn btn-success" type="submit" name="action" value="update">
+                    <button class="btn btn-success" id="transaction-{{id}}-update" type="submit" name="action" value="update">
                         <span class="glyphicon glyphicon-ok"></span>
                     </button>
                     <button class="btn btn-danger" type="submit" name="action" value="delete">
