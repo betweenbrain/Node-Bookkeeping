@@ -91,6 +91,7 @@ module.exports = {
                     'Tools & Equipment',
                     'Total Operating Expenses',
                     'Travel & Vacation',
+                    'Tuition',
                     'Uncategorized Expense',
                     'Utilities - Electricity',
                     'Utilities - Propane',
