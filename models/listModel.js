@@ -10,7 +10,29 @@
 const mysql = require('../common/mysql');
 
 module.exports = {
-    list: function (callback) {
+    categories: function (callback) {
+        var sql = 'SELECT id AS catId, name AS catName FROM category';
+
+        mysql.query(sql, null, function (err, rows) {
+            if (err) {
+                callback(err)
+            }
+
+            if (!err) {
+                callback(null, rows)
+            }
+        })
+    },
+
+    list: function (catId, callback) {
+        var catId = (catId)
+            ? catId
+            : null;
+
+        var params = (catId)
+            ? [catId]
+            : null;
+
         var sql = 'SELECT id, date, description, amount, balance, category, status, ' +
             '(SELECT c.name ' +
             'FROM category AS c ' +
@@ -20,10 +42,13 @@ module.exports = {
             'IS NOT NULL ' +
             'AND t.id = transaction.id ' +
             ') as categoryName ' +
-            'FROM transaction ' +
-            'ORDER BY date DESC';
+            'FROM transaction ';
 
-        mysql.query(sql, null, function (err, trans) {
+        sql += (catId)
+            ? 'WHERE category = ? ORDER BY date DESC'
+            : 'ORDER BY date DESC';
+
+        mysql.query(sql, params, function (err, trans) {
             if (err) {
                 callback(err)
             }

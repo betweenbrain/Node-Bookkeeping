@@ -11,7 +11,22 @@ var listModel = require('../models/listModel');
 
 module.exports = function (app) {
     app.get('/', function (req, res) {
-        listModel.list(function (err, data) {
+        listModel.list(null, function (err, data) {
+            if (err) {
+                res.status(400);
+                res.render('index', {message: err});
+            }
+            if (!err) {
+                res.render('list', {
+                    rows: data.trans,
+                    cats: data.cats
+                });
+            }
+        })
+    });
+
+    app.get('/category/', function (req, res) {
+        listModel.list(req.body.catId, function (err, data) {
             if (err) {
                 res.status(400);
                 res.render('index', {message: err});
