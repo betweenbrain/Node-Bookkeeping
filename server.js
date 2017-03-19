@@ -16,8 +16,17 @@ var app          = express();
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static('public'));
+app.use(
+    // Set query parameters as req.body for consistency
+    function (req, res, next) {
+        if (req.method === 'GET' || req.method === 'DELETE') {
+            req.body = req.query
+        }
+        next()
+    },
+    bodyParser.urlencoded({extended: true}),
+    express.static('public')
+);
 app.use(enrouten({directory: 'routes'}));
 
 app.listen(8080);
