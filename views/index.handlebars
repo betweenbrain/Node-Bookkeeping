@@ -3,6 +3,17 @@
     <ul>
         {{#each links}}
             <li><a href="{{href}}">{{text}}</a>
+                {{#if accounts}}
+                    <form action="/list/account/">
+                        <select name="account"
+                                onchange="document.getElementById('account').click();">
+                            {{#each accounts}}
+                                <option value="{{account}}">{{account}}</option>
+                            {{/each}}
+                        </select>
+                        <button id="category" type="submit">Submit</button>
+                    </form>
+                {{/if}}
                 {{#if cats}}
                     <form action="/list/category/">
                         <select name="catId"

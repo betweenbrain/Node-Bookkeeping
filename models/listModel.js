@@ -10,6 +10,20 @@
 const mysql = require('../common/mysql');
 
 module.exports = {
+    accounts: function (callback) {
+        var sql = 'SELECT DISTINCT account FROM transaction';
+
+        mysql.query(sql, null, function (err, rows) {
+            if (err) {
+                callback(err)
+            }
+
+            if (!err) {
+                callback(null, rows)
+            }
+        })
+    },
+
     categories: function (callback) {
         var sql = 'SELECT id AS catId, name AS catName FROM category';
 
@@ -24,14 +38,24 @@ module.exports = {
         })
     },
 
-    list: function (catId, callback) {
+    list: function (account, catId, callback) {
+        var account = (account)
+            ? account
+            : null;
+
         var catId = (catId)
             ? catId
             : null;
 
-        var params = (catId)
-            ? [catId]
-            : null;
+        if (account) {
+            var params = [account];
+        }
+        else if (catId) {
+            var params = [catId];
+        }
+        else {
+            var params = null;
+        }
 
         var sql = 'SELECT id, date, description, amount, balance, category, status, ' +
             '(SELECT c.name ' +
@@ -44,9 +68,15 @@ module.exports = {
             ') as categoryName ' +
             'FROM transaction ';
 
-        sql += (catId)
-            ? 'WHERE category = ? ORDER BY date DESC'
-            : 'ORDER BY date DESC';
+        if (account) {
+            sql += 'WHERE account = ? ORDER BY date DESC';
+        }
+        else if (catId) {
+            sql += 'WHERE category = ? ORDER BY date DESC';
+        }
+        else {
+            sql += 'ORDER BY date DESC';
+        }
 
         mysql.query(sql, params, function (err, trans) {
             if (err) {
