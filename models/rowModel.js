@@ -190,7 +190,7 @@ module.exports = {
     processRow: function (row, callback) {
         checkDuplicate(row)
             .then(getCategory)
-            .then(checkFilters)
+            //.then(checkFilters)
             .then(getStatus)
             .then(importRow)
             .then(function (data) {
