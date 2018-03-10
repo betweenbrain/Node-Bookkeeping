@@ -1,16 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="/css/custom.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Node Bookkeeping</title>
 </head>
+
 <body>
-<div class="container-fluid theme-showcase" role="main">
-{{{body}}}
-</div>
+    <div class="container-fluid theme-showcase" role="main">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    <li>
+                        <a href="/import">Import</a>
+                    </li>
+                    <li>
+                        <a href="/list">List</a>
+                    </li>
+                    <li>
+                        <a href="/list/account/">List by Account</a>
+                    </li>
+                    <li>
+                        <a href="/list/category/">List by Category</a>
+                    </li>
+                    <li>
+                        <a href="/summary">Summary</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        {{{body}}}
+    </div>
 </body>
+
 </html>

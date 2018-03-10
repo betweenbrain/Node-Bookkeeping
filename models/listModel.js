@@ -38,7 +38,7 @@ module.exports = {
         })
     },
 
-    list: function (account, catId, callback) {
+    list: function (account, catId, start, callback) {
         var account = (account)
             ? account
             : null;
@@ -62,21 +62,22 @@ module.exports = {
             'FROM category AS c ' +
             'JOIN transaction AS t ' +
             'ON t.category = c.id ' +
-            'WHERE t.category ' +
-            'IS NOT NULL ' +
+            'WHERE t.category IS NOT NULL ' +
             'AND t.id = transaction.id ' +
             ') as categoryName ' +
             'FROM transaction ';
 
         if (account) {
-            sql += 'WHERE account = ? ORDER BY date DESC';
+            sql += 'WHERE account = ? ORDER BY date DESC ';
         }
         else if (catId) {
-            sql += 'WHERE category = ? ORDER BY date DESC';
+            sql += 'WHERE category = ? ORDER BY date DESC ';
         }
         else {
-            sql += 'ORDER BY date DESC';
+            sql += 'ORDER BY date DESC ';
         }
+
+        sql += 'LIMIT ' + start + ', 50';
 
         mysql.query(sql, params, function (err, trans) {
             if (err) {

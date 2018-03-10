@@ -1,1 +1,3 @@
-AccountHistory.csv
+*.csv
+*.xls
+*.sql.qz

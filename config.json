@@ -2,7 +2,7 @@
   "mysql": {
     "bigNumberStrings": true,
     "dateStrings": true,
-    "database": "node_bookkeeping",
+    "database": "node-bookkeeping",
     "debug": false,
     "host": "localhost",
     "password": "",
