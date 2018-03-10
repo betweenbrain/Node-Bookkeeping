@@ -11,13 +11,14 @@ var itemModel = require('../models/itemModel');
 
 module.exports = function (app) {
     app.get('/', function (req, res) {
+        var start = (req.query.start) ? req.query.start : 0;
         itemModel.edit(req, function (err, data) {
             if (err) {
                 res.status(400);
                 res.render('index', {message: err});
             }
             if (!err) {
-                res.redirect('/list#transaction-' + data.id);
+                res.redirect('/list?start=' + start +'#transaction-' + data.id);
             }
         })
     });

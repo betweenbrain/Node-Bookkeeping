@@ -1,46 +1,58 @@
 <table class="table table-striped">
     <thead>
-    <tr class="row">
-        <th class="col-md-1">Date</th>
-        <th class="col-md-4">Description</th>
-        <th class="col-md-2">Category</th>
-        <th class="col-md-1">Amount</th>
-        <th class="col-md-1">Balance</th>
-        <th class="col-md-2">Status</th>
-        <th class="col-md-1">Actions</th>
-    </tr>
+        <tr class="row">
+            <th class="col-md-1">Date</th>
+            <th class="col-md-4">Description</th>
+            <th class="col-md-2">Category</th>
+            <th class="col-md-1">Amount</th>
+            <th class="col-md-1">Balance</th>
+            <th class="col-md-2">Status</th>
+            <th class="col-md-1">Actions</th>
+        </tr>
     </thead>
     <tbody>
-    {{#each rows}}
-        <tr class="row" id="transaction-{{id}}" {{#unless category}}style="background-color:#d9edf7"{{/unless}}>
+        {{#each rows}}
+        <tr class="row" id="transaction-{{id}}" {{#unless category}}style="background-color:#d9edf7" {{/unless}}>
             <form action="/item" method="get">
                 <td class="col-md-1">{{date}}</td>
                 <td class="col-md-4">{{description}}</td>
                 <td class="col-md-2">
                     <select name="category" onchange="document.getElementById('transaction-{{id}}-update').click();">
                         {{#if category}}
-                            <option value="{{category}}" selected>{{categoryName}}</option>
+                        <option value="{{category}}" selected>{{categoryName}}</option>
                         {{else}}
-                            <option></option>
-                        {{/if}}
-                        {{#each ../cats}}
-                            <option value="{{catId}}">{{catName}}</option>
+                        <option></option>
+                        {{/if}} {{#each ../cats}}
+                        <option value="{{catId}}">{{catName}}</option>
                         {{/each}}
                     </select>
-                <td class="col-md-1">{{amount}}</td>
-                <td class="col-md-1">{{balance}}</td>
-                <td class="col-md-2">{{status}}</td>
-                <td class="col-md-1">
-                    <button class="btn btn-success" id="transaction-{{id}}-update" type="submit" name="action" value="update">
-                        <span class="glyphicon glyphicon-ok"></span>
-                    </button>
-                    <button class="btn btn-danger" type="submit" name="action" value="delete">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </button>
-                </td>
-                <input type="hidden" name="id" value="{{id}}"/>
+                    <td class="col-md-1">{{amount}}</td>
+                    <td class="col-md-1">{{balance}}</td>
+                    <td class="col-md-2">{{status}}</td>
+                    <td class="col-md-1">
+                        <button class="btn btn-success" id="transaction-{{id}}-update" type="submit" name="action" value="update">
+                            <span class="glyphicon glyphicon-ok"></span>
+                        </button>
+                        <button class="btn btn-danger" type="submit" name="action" value="delete">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </td>
+                    <input type="hidden" name="id" value="{{id}}" />
+                    <input type="hidden" name="start" value="{{../start}}" />
             </form>
         </tr>
-    {{/each}}
+        {{/each}}
     </tbody>
 </table>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="/list?start={{next}}">Next 50</a>
+            </li>
+            <li>
+                <a href="/list?start={{prev}}">Previous 50</a>
+            </li>
+        </ul>
+    </div>
+</nav>

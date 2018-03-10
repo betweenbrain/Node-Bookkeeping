@@ -11,7 +11,8 @@ var listModel = require('../models/listModel');
 
 module.exports = function (app) {
     app.get('/', function (req, res) {
-        listModel.list(null, null, function (err, data) {
+        var start = (req.query.start) ? req.query.start : 0;
+        listModel.list(null, null, start, function (err, data) {
             if (err) {
                 res.status(400);
                 res.render('index', {message: err});
@@ -19,7 +20,10 @@ module.exports = function (app) {
             if (!err) {
                 res.render('list', {
                     rows: data.trans,
-                    cats: data.cats
+                    cats: data.cats,
+                    start: Number(start),
+                    next: (Number(start) + 50),
+                    prev: (Number(start) - 50)
                 });
             }
         })
